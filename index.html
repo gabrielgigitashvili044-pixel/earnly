@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EARNLY</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0a0f1e, #0f2444, #1a1a3e);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 20px;
+      color: white;
+    }
+    .container { width: 100%; max-width: 600px; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header h1 { font-size: 32px; font-weight: 800; letter-spacing: 4px; margin-bottom: 6px; }
+    .header p { font-size: 14px; color: rgba(255,255,255,0.4); }
+    .card-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; position: relative;
+    }
+    .label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    input {
+      width: 100%; padding: 11px 14px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: white; font-size: 14px; outline: none;
+      transition: border 0.2s, background 0.2s;
+    }
+    input::placeholder { color: rgba(255,255,255,0.22); }
+    input:focus { border-color: #3b82f6; background: rgba(59,130,246,0.07); }
+    .country-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .ctag {
+      font-size: 12px; padding: 4px 10px; border-radius: 20px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.55); cursor: pointer; transition: all 0.15s;
+    }
+    .ctag:hover, .ctag.active { background: rgba(59,130,246,0.2); border-color: #3b82f6; color: white; }
+    .skills-wrapper { position: relative; }
+    .dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #1a2340; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; max-height: 220px; overflow-y: auto;
+      z-index: 100; display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .dropdown.open { display: block; }
+    .dropdown::-webkit-scrollbar { width: 4px; }
+    .dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    .drop-category { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; padding: 10px 14px 4px; }
+    .drop-item {
+      padding: 9px 14px; font-size: 13px; color: rgba(255,255,255,0.75);
+      cursor: pointer; transition: background 0.1s; display: flex; align-items: center; gap: 8px;
+    }
+    .drop-item:hover { background: rgba(59,130,246,0.15); color: white; }
+    .drop-item .cat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .no-results { padding: 14px; font-size: 13px; color: rgba(255,255,255,0.3); text-align: center; }
+    .selected-skill {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 8px; padding: 5px 12px; border-radius: 20px;
+      background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4);
+      font-size: 13px; color: #93c5fd;
+    }
+    .selected-skill .remove { cursor: pointer; opacity: 0.6; font-size: 15px; line-height: 1; }
+    .find-btn {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white; font-weight: 700; font-size: 16px; cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-top: 4px; letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(34,197,94,0.25);
+    }
+    .find-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(34,197,94,0.38); }
+    .find-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+    .error { color: #f87171; font-size: 13px; margin-top: 8px; display: none; text-align: center; }
+    .results-header { font-size: 11px; color: rgba(255,255,255,0.3); margin: 1.5rem 0 0.8rem; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+    .result-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px; padding: 1.1rem 1.25rem; margin-bottom: 10px;
+      animation: fadeUp 0.3s ease forwards; opacity: 0;
+    }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .card-emoji { font-size: 22px; }
+    .card-title { font-size: 15px; font-weight: 600; }
+    .card-platform { font-size: 12px; color: #60a5fa; font-weight: 500; margin-top: 1px; }
+    .card-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; margin-bottom: 10px; }
+    .steps-list { list-style: none; margin-bottom: 12px; }
+    .steps-list li { font-size: 12px; color: rgba(255,255,255,0.5); padding: 3px 0; display: flex; align-items: flex-start; gap: 8px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; background: rgba(59,130,246,0.2); color: #60a5fa; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+    .earn-badge { font-size: 12px; padding: 4px 12px; border-radius: 20px; background: rgba(34,197,94,0.12); color: #4ade80; font-weight: 600; border: 1px solid rgba(34,197,94,0.18); }
+    .start-btn { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 8px; border: none; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+    .start-btn:hover { transform: translateY(-1px); color: white; }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 10px 0; }
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .powered { text-align: center; font-size: 11px; color: rgba(255,255,255,0.15); margin-top: 2rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>EARNLY</h1>
+    <p>Find realistic ways to earn money based on your skills & location</p>
+  </div>
+
+  <div class="card-input">
+    <div class="label">Your Country</div>
+    <input id="country" type="text" placeholder="Type or select your country..." oninput="filterCountry(this.value)" />
+    <div class="country-tags">
+      <span class="ctag" onclick="setCountry('Italy',this)">🇮🇹 Italy</span>
+      <span class="ctag" onclick="setCountry('Georgia',this)">🇬🇪 Georgia</span>
+      <span class="ctag" onclick="setCountry('Germany',this)">🇩🇪 Germany</span>
+      <span class="ctag" onclick="setCountry('USA',this)">🇺🇸 USA</span>
+      <span class="ctag" onclick="setCountry('Turkey',this)">🇹🇷 Turkey</span>
+      <span class="ctag" onclick="setCountry('France',this)">🇫🇷 France</span>
+      <span class="ctag" onclick="setCountry('Spain',this)">🇪🇸 Spain</span>
+      <span class="ctag" onclick="setCountry('Poland',this)">🇵🇱 Poland</span>
+      <span class="ctag" onclick="setCountry('Ukraine',this)">🇺🇦 Ukraine</span>
+      <span class="ctag" onclick="setCountry('India',this)">🇮🇳 India</span>
+      <span class="ctag" onclick="setCountry('Brazil',this)">🇧🇷 Brazil</span>
+      <span class="ctag" onclick="setCountry('Nigeria',this)">🇳🇬 Nigeria</span>
+    </div>
+  </div>
+
+  <div class="card-input">
+    <div class="label">Your Skill / Profession</div>
+    <div class="skills-wrapper">
+      <input id="skills-input" type="text" placeholder="Search from 200+ professions..." oninput="filterSkills(this.value)" onfocus="openDropdown()" autocomplete="off" />
+      <div class="dropdown" id="skills-dropdown"></div>
+    </div>
+    <div id="selected-skill-tag"></div>
+  </div>
+
+  <div id="error" class="error"></div>
+  <button class="find-btn" id="find-btn" onclick="findIncome()">Find Ways to Earn</button>
+  <div id="results"></div>
+  <div class="powered">EARNLY · Powered by AI</div>
+</div>
+
+<script>
+const SKILLS = [
+  { cat: "Freelance & Writing", color: "#3b82f6", items: ["Copywriter","Content writer","Blog writer","SEO writer","Ghostwriter","Translator","Proofreader","Editor","Script writer","Screenwriter","Resume writer","Technical writer"] },
+  { cat: "Social Media & Video", color: "#a855f7", items: ["Social media manager","TikTok content creator","YouTube script writer","Thumbnail designer","Video editor","Motion designer","Podcast host","Reels editor"] },
+  { cat: "Design & Creative", color: "#ec4899", items: ["Graphic designer","Logo designer","UI designer","UX designer","Web designer","Digital artist","Illustrator","Animator","3D modeler","Canva template creator","Branding expert"] },
+  { cat: "Development", color: "#22c55e", items: ["WordPress developer","Shopify developer","Front-end developer","Back-end developer","Full-stack developer","Mobile app developer","Game developer","Python developer","No-code developer","Webflow developer","API integrator"] },
+  { cat: "AI & Tech", color: "#f59e0b", items: ["AI prompt engineer","Chatbot builder","AI content creator","AI automation builder","ChatGPT consultant","Automation specialist","Zapier expert","Data analyst","Data scientist","Machine learning engineer"] },
+  { cat: "Marketing & Sales", color: "#ef4444", items: ["Email marketer","Affiliate marketer","Lead generator","Cold email specialist","Funnel builder","Sales closer","CRM manager","Growth hacker","SEO specialist","Paid ads manager"] },
+  { cat: "Business & Remote", color: "#06b6d4", items: ["Virtual assistant","Data entry specialist","Customer support agent","Technical support","Notion consultant","Project manager","Remote accountant","Bookkeeper","Financial advisor","Community manager"] },
+  { cat: "E-commerce & Money", color: "#84cc16", items: ["Dropshipping manager","Amazon FBA seller","Etsy seller","Print-on-demand seller","Digital product seller","Course creator","E-book seller","Template seller","Online coach","Fiverr gig seller"] },
+  { cat: "Teaching & Coaching", color: "#f97316", items: ["Language tutor","Coding tutor","Math tutor","Music teacher","Fitness coach","Life coach","Business coach","Diet consultant","Meditation coach"] },
+  { cat: "Creative & Media", color: "#8b5cf6", items: ["Photographer","Stock photo seller","Videographer","Music producer","Beat seller","Voice-over artist","Meme page owner","YouTube automation channel owner","TikTok theme page owner"] }
+];
+
+let selectedSkill = '';
+
+function setCountry(val, el) {
+  document.getElementById('country').value = val;
+  document.querySelectorAll('.ctag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function filterCountry(val) {
+  document.querySelectorAll('.ctag').forEach(t => {
+    t.style.display = t.textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function renderDropdown(query) {
+  const dd = document.getElementById('skills-dropdown');
+  let html = ''; let total = 0;
+  SKILLS.forEach(cat => {
+    const filtered = query ? cat.items.filter(i => i.toLowerCase().includes(query.toLowerCase())) : cat.items;
+    if (!filtered.length) return;
+    html += `<div class="drop-category">${cat.cat}</div>`;
+    filtered.forEach(item => {
+      html += `<div class="drop-item" onclick="selectSkill('${item}')"><span class="cat-dot" style="background:${cat.color}"></span>${item}</div>`;
+    });
+    total += filtered.length;
+  });
+  if (!total) html = '<div class="no-results">No results found</div>';
+  dd.innerHTML = html;
+}
+
+function filterSkills(val) { renderDropdown(val); document.getElementById('skills-dropdown').classList.add('open'); }
+function openDropdown() { renderDropdown(document.getElementById('skills-input').value); document.getElementById('skills-dropdown').classList.add('open'); }
+
+function selectSkill(skill) {
+  selectedSkill = skill;
+  document.getElementById('skills-input').value = skill;
+  document.getElementById('skills-dropdown').classList.remove('open');
+  document.getElementById('selected-skill-tag').innerHTML = `<div class="selected-skill">✓ ${skill} <span class="remove" onclick="clearSkill()">×</span></div>`;
+}
+
+function clearSkill() {
+  selectedSkill = '';
+  document.getElementById('skills-input').value = '';
+  document.getElementById('selected-skill-tag').innerHTML = '';
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.skills-wrapper')) document.getElementById('skills-dropdown').classList.remove('open');
+});
+
+async function findIncome() {
+  const country = document.getElementById('country').value.trim();
+  const skill = selectedSkill || document.getElementById('skills-input').value.trim();
+  const errEl = document.getElementById('error');
+  const resultsEl = document.getElementById('results');
+  const btn = document.getElementById('find-btn');
+
+  errEl.style.display = 'none';
+  resultsEl.innerHTML = '';
+
+  if (!country) { errEl.textContent = 'Please enter your country.'; errEl.style.display = 'block'; return; }
+  if (!skill) { errEl.textContent = 'Please select or type a skill.'; errEl.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> AI is searching...';
+
+  try {
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country, skill })
+    });
+
+    const ideas = await response.json();
+
+    resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} opportunities found · ${skill} · ${country}</div>` +
+      ideas.map((idea, i) => `
+        <div class="result-card" style="animation-delay:${i*0.08}s">
+          <div class="card-top">
+            <span class="card-emoji">${idea.icon}</span>
+            <div><div class="card-title">${idea.title}</div><div class="card-platform">${idea.platform}</div></div>
+          </div>
+          <div class="card-desc">${idea.desc}</div>
+          <hr class="divider">
+          <ul class="steps-list">
+            ${idea.steps.map(s => `<li><span class="step-num">→</span>${s}</li>`).join('')}
+          </ul>
+          <div class="card-footer">
+            <span class="earn-badge">📈 ${idea.earn}</span>
+            <a href="${idea.link}" target="_blank" class="start-btn">🚀 ${idea.linkText}</a>
+          </div>
+        </div>`).join('');
+
+  } catch(e) {
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = 'Find Ways to Earn';
+}
+</script>
+</body>
+</html>
