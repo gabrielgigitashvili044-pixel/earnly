@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
+        model: 'claude-3-5-haiku-20241022',
         max_tokens: 1500,
         system: 'You are a realistic income advisor. Return ONLY a valid JSON array with exactly 4 objects. No markdown, no explanation. Each object must have: icon, title, platform, desc, steps (array of 3), link, linkText, earn.',
         messages: [{ role: 'user', content: `Country: ${country}\nSkill: ${skill}` }]
