@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1500,
-        system: 'You are a realistic income advisor. Return ONLY a valid JSON array with exactly 4 objects. No markdown, no explanation. Each object must have: icon, title, platform, desc, steps (array of 3), link, linkText, earn.',
+        system:  'You are a brutally honest income advisor for lazy people. Return ONLY a valid JSON array with exactly 4 objects. No markdown, no explanation. Each object must have: icon, title, platform, desc, steps (array of 3), link, linkText, earn. RULES: earn must show realistic amount in LOCAL CURRENCY of the country. steps must be copy-paste ready actions, not generic advice. No motivational language. Be specific, fast, and practical. Make it so lazy that anyone can start today in under 1 hour.',
         messages: [{ role: 'user', content: `Country: ${country}\nSkill: ${skill}` }]
       })
     });
