@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -144,6 +145,8 @@
 </div>
 
 <script>
+// ✅ NO API KEY HERE — it lives safely in /api/search.js on the server
+
 const SKILLS = [
   { cat: "Freelance & Writing", color: "#3b82f6", items: ["Copywriter","Content writer","Blog writer","SEO writer","Ghostwriter","Translator","Proofreader","Editor","Script writer","Screenwriter","Resume writer","Technical writer"] },
   { cat: "Social Media & Video", color: "#a855f7", items: ["Social media manager","TikTok content creator","YouTube script writer","Thumbnail designer","Video editor","Motion designer","Podcast host","Reels editor"] },
@@ -224,13 +227,20 @@ async function findIncome() {
   btn.innerHTML = '<span class="spinner"></span> AI is searching...';
 
   try {
+    // ✅ Calls our own serverless function — API key stays on the server
     const response = await fetch('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ country, skill })
     });
 
-    const ideas = await response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Server error');
+    }
+
+    const ideas = data.ideas;
 
     resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} opportunities found · ${skill} · ${country}</div>` +
       ideas.map((idea, i) => `
