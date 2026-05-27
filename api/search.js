@@ -6,7 +6,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
     const { country, skill } = req.body;
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const apiRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,11 @@ module.exports = async function handler(req, res) {
         messages: [{ role: 'user', content: `Country: ${country}\nSkill: ${skill}` }]
       })
     });
-    const data = await response.json();
+    const data = await apiRes.json();
+    if (!data.content) {
+      console.error('Anthropic API error:', JSON.stringify(data));
+      return res.status(500).json({ error: data.error?.message || 'API error' });
+    }
     const raw = data.content.map(b => b.text || '').join('');
     const clean = raw.replace(/```json|```/g, '').trim();
     const ideas = JSON.parse(clean);
