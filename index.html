@@ -380,9 +380,9 @@
     <div class="container">
 
       <div class="header">
-        <div class="live-badge"><span class="live-dot"></span> Free · AI-Powered · No Signup</div>
+        <div class="live-badge"><span class="live-dot"></span> Free · No Signup · Instant Results</div>
         <h1>Your Skill.<br><span class="grad">Real Money.</span></h1>
-        <p class="sub">Drop your country and skill. In 10 seconds, AI shows you exactly how to make money — copy-paste ready, no courses, no gurus, no BS.</p>
+        <p class="sub">Tell us your country and skill. We find exactly how to turn what you already know into real income — copy-paste ready. No courses. No gurus. No waiting.</p>
         <div class="counter-strip">
           🔥 <span class="counter-num" id="counter">0</span> ideas generated today
         </div>
@@ -397,7 +397,7 @@
         <div class="how-title">How it works</div>
         <div class="how-steps">
           <div class="how-step"><div class="how-num">1</div><p>Pick country & skill</p></div>
-          <div class="how-step"><div class="how-num">2</div><p>AI finds opportunities</p></div>
+          <div class="how-step"><div class="how-num">2</div><p>We find your best match</p></div>
           <div class="how-step"><div class="how-num">3</div><p>Start earning today</p></div>
         </div>
       </div>
@@ -561,7 +561,7 @@ async function findIncome() {
   if (!skill) { errEl.textContent = 'Please select or type a skill.'; errEl.style.display = 'block'; return; }
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Finding your opportunities...';
+  btn.innerHTML = '<span class="spinner"></span> Scanning opportunities...';
 
   try {
     const response = await fetch('/api/search', {
