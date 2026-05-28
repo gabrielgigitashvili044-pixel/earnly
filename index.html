@@ -3,85 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EARNLY — Turn Your Skills Into Cash</title>
+  <title>EARNLY — Work Less. Earn More.</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body { font-family: 'Inter', sans-serif; background: #04070f; min-height: 100vh; color: #fff; overflow-x: hidden; }
-    body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse 80% 50% at 10% 40%, rgba(34,197,94,0.06) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 90% 10%, rgba(245,158,11,0.05) 0%, transparent 60%), radial-gradient(ellipse 70% 60% at 50% 100%, rgba(59,130,246,0.04) 0%, transparent 60%); pointer-events: none; z-index: 0; }
-    .container { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 64px 20px 80px; }
-    .header { text-align: center; margin-bottom: 3.5rem; }
-    .live-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 16px; border-radius: 100px; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.18); font-size: 12px; font-weight: 600; color: #4ade80; margin-bottom: 1.75rem; letter-spacing: 0.3px; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: blink 2s ease-in-out infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 8px #22c55e; } 50% { opacity: 0.3; box-shadow: none; } }
-    .header h1 { font-size: clamp(36px, 8vw, 58px); font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 1rem; }
-    .grad { background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #f59e0b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .header .sub { font-size: 16px; color: rgba(255,255,255,0.38); line-height: 1.65; max-width: 400px; margin: 0 auto 1.5rem; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 10% 40%, rgba(34,197,94,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(245,158,11,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 60% at 50% 100%, rgba(59,130,246,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container { position: relative; z-index: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 60px 20px 80px; }
+
+    /* HEADER */
+    .header { text-align: center; margin-bottom: 3rem; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 16px; border-radius: 100px;
+      background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.18);
+      font-size: 12px; font-weight: 600; color: #4ade80;
+      margin-bottom: 1.5rem; letter-spacing: 0.3px;
+    }
+
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #22c55e; box-shadow: 0 0 8px #22c55e;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px #22c55e; }
+      50% { opacity: 0.3; box-shadow: none; }
+    }
+
+    .header h1 {
+      font-size: clamp(40px, 9vw, 64px);
+      font-weight: 900; line-height: 1.0;
+      letter-spacing: -2.5px; margin-bottom: 1rem;
+    }
+
+    .grad {
+      background: linear-gradient(135deg, #22c55e 0%, #f59e0b 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .header .sub {
+      font-size: 16px; color: rgba(255,255,255,0.35);
+      line-height: 1.6; max-width: 380px; margin: 0 auto 1.5rem;
+    }
+
     .stats { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-    .stat-pill { font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 100px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); }
-    .card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 1.5rem; margin-bottom: 10px; transition: border-color 0.25s; }
+
+    .stat-pill {
+      font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 100px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* HOW IT WORKS */
+    .how-section { margin: 2.5rem 0; }
+
+    .how-title {
+      text-align: center; font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.2); text-transform: uppercase;
+      letter-spacing: 2px; margin-bottom: 1rem;
+    }
+
+    .how-steps {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+    }
+
+    .how-step {
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px; padding: 1rem; text-align: center;
+    }
+
+    .how-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(34,197,94,0.1); color: #4ade80;
+      font-size: 13px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .how-step p { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.4; font-weight: 500; }
+
+    /* INPUTS */
+    .card {
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px; padding: 1.5rem; margin-bottom: 10px; transition: border-color 0.25s;
+    }
+
     .card:focus-within { border-color: rgba(34,197,94,0.25); }
-    .label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.8px; margin-bottom: 10px; }
-    input { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.04); color: white; font-size: 15px; font-weight: 500; font-family: 'Inter', sans-serif; outline: none; transition: all 0.2s; }
+
+    .label {
+      font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.25);
+      text-transform: uppercase; letter-spacing: 1.8px; margin-bottom: 10px;
+    }
+
+    input {
+      width: 100%; padding: 13px 16px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.04);
+      color: white; font-size: 15px; font-weight: 500; font-family: 'Inter', sans-serif;
+      outline: none; transition: all 0.2s;
+    }
+
     input::placeholder { color: rgba(255,255,255,0.18); }
     input:focus { border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.03); box-shadow: 0 0 0 3px rgba(34,197,94,0.07); }
+
     .country-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .ctag { font-size: 12px; font-weight: 500; padding: 5px 13px; border-radius: 100px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.42); cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+
+    .ctag {
+      font-size: 12px; font-weight: 500; padding: 5px 13px; border-radius: 100px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.42); cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+
     .ctag:hover, .ctag.active { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.25); color: #4ade80; }
+
     .skills-wrapper { position: relative; }
-    .dropdown { position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: #0c1322; border: 1px solid rgba(255,255,255,0.09); border-radius: 16px; max-height: 260px; overflow-y: auto; z-index: 100; display: none; box-shadow: 0 24px 64px rgba(0,0,0,0.7); }
+
+    .dropdown {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: #0c1322; border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px; max-height: 260px; overflow-y: auto;
+      z-index: 100; display: none; box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    }
+
     .dropdown.open { display: block; }
     .dropdown::-webkit-scrollbar { width: 3px; }
     .dropdown::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
     .drop-category { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 1.5px; padding: 12px 16px 4px; }
+
     .drop-item { padding: 10px 16px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; gap: 10px; }
     .drop-item:hover { background: rgba(34,197,94,0.07); color: white; }
     .cat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
     .no-results { padding: 20px; font-size: 13px; color: rgba(255,255,255,0.25); text-align: center; }
-    .selected-skill { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 6px 14px; border-radius: 100px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); font-size: 13px; font-weight: 600; color: #4ade80; }
+
+    .selected-skill {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+      padding: 6px 14px; border-radius: 100px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+      font-size: 13px; font-weight: 600; color: #4ade80;
+    }
+
     .selected-skill .remove { cursor: pointer; opacity: 0.45; font-size: 16px; line-height: 1; transition: opacity 0.15s; }
     .selected-skill .remove:hover { opacity: 1; }
-    .find-btn { width: 100%; padding: 19px; border-radius: 16px; border: none; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; font-weight: 800; font-size: 17px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; letter-spacing: -0.2px; box-shadow: 0 8px 32px rgba(34,197,94,0.28); position: relative; overflow: hidden; }
+
+    /* CTA BUTTON */
+    .find-btn {
+      width: 100%; padding: 19px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white; font-weight: 800; font-size: 17px; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin-top: 10px; letter-spacing: -0.2px;
+      box-shadow: 0 8px 32px rgba(34,197,94,0.28); position: relative; overflow: hidden;
+    }
+
     .find-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent); pointer-events: none; }
     .find-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(34,197,94,0.38); }
     .find-btn:active { transform: translateY(0); }
     .find-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
+
     .error { color: #f87171; font-size: 13px; font-weight: 500; margin-top: 10px; display: none; text-align: center; }
-    .results-header { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.2); margin: 2.5rem 0 1rem; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
-    .result-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 1.5rem; margin-bottom: 10px; animation: fadeUp 0.45s ease forwards; opacity: 0; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
-    .result-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-3px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-    .result-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #22c55e, #f59e0b, #3b82f6); }
+
+    /* RESULTS */
+    .results-header {
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.2);
+      margin: 2.5rem 0 1rem; text-align: center;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+
+    .result-card {
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px; padding: 1.25rem 1.5rem; margin-bottom: 10px;
+      animation: fadeUp 0.45s ease forwards; opacity: 0;
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    .result-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+
+    .result-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #22c55e, #f59e0b, #3b82f6);
+    }
+
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
-    .card-icon { width: 50px; height: 50px; border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
-    .card-platform { font-size: 12px; color: #60a5fa; font-weight: 600; letter-spacing: 0.2px; }
-    .card-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.65; margin-bottom: 14px; }
-    .steps-list { list-style: none; margin-bottom: 16px; }
-    .steps-list li { font-size: 13px; color: rgba(255,255,255,0.45); padding: 6px 0; display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+
+    .card-left { display: flex; align-items: center; gap: 12px; }
+
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+
+    .card-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .card-platform { font-size: 11px; color: #60a5fa; font-weight: 600; }
+
+    .earn-badge {
+      font-size: 15px; font-weight: 800; padding: 6px 14px; border-radius: 100px;
+      background: rgba(34,197,94,0.12); color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.2); white-space: nowrap;
+    }
+
+    .card-desc { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.5; margin-bottom: 12px; }
+
+    .steps-list { list-style: none; margin-bottom: 14px; }
+
+    .steps-list li {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      padding: 7px 0; display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
     .steps-list li:last-child { border-bottom: none; }
-    .step-num { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; border-radius: 6px; background: rgba(34,197,94,0.1); color: #4ade80; font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.05); }
-    .earn-badge { font-size: 14px; font-weight: 800; padding: 7px 16px; border-radius: 100px; background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.18); letter-spacing: -0.3px; }
-    .start-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 10px; border: none; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; text-decoration: none; transition: all 0.15s; box-shadow: 0 4px 16px rgba(59,130,246,0.28); }
-    .start-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.4); color: white; }
-    .spinner { display: inline-block; width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.25); border-top-color: white; border-radius: 50%; animation: spin 0.65s linear infinite; }
+
+    .step-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; }
+
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; border-radius: 6px;
+      background: rgba(34,197,94,0.1); color: #4ade80;
+      font-size: 11px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.3);
+      font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all 0.15s; flex-shrink: 0; white-space: nowrap;
+    }
+
+    .copy-btn:hover { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2); color: #4ade80; }
+    .copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #4ade80; }
+
+    .start-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 20px; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: white; font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+      cursor: pointer; text-decoration: none; transition: all 0.15s;
+      box-shadow: 0 4px 16px rgba(59,130,246,0.25); width: 100%; justify-content: center;
+    }
+
+    .start-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(59,130,246,0.38); color: white; }
+
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.25); border-top-color: white;
+      border-radius: 50%; animation: spin 0.65s linear infinite;
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
-    .powered { text-align: center; font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.08); margin-top: 3.5rem; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    /* FOOTER */
+    .site-footer {
+      text-align: center; margin-top: 4rem; padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .footer-logo { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+    .footer-sub { font-size: 11px; color: rgba(255,255,255,0.15); letter-spacing: 1px; text-transform: uppercase; }
+
+    @media (max-width: 480px) {
+      .how-steps { grid-template-columns: 1fr; }
+      .card-header { flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
 <div class="container">
+
   <div class="header">
-    <div class="live-badge"><span class="live-dot"></span>AI-Powered · Free Forever</div>
-    <h1>Your Skills.<br><span class="grad">Your Money.</span></h1>
-    <p class="sub">Tell us where you are and what you do — AI finds your best ways to earn online in seconds.</p>
+    <div class="live-badge"><span class="live-dot"></span> Free · AI-Powered · No Signup</div>
+    <h1>Work Less.<br><span class="grad">Earn More.</span></h1>
+    <p class="sub">Pick your country and skill. We find exactly how to turn what you already have into real money — no courses, no gurus.</p>
     <div class="stats">
       <span class="stat-pill">200+ professions</span>
       <span class="stat-pill">50+ countries</span>
-      <span class="stat-pill">Real opportunities</span>
+      <span class="stat-pill">100% free</span>
     </div>
   </div>
+
+  <div class="how-section">
+    <div class="how-title">How it works</div>
+    <div class="how-steps">
+      <div class="how-step"><div class="how-num">1</div><p>Pick your country & skill</p></div>
+      <div class="how-step"><div class="how-num">2</div><p>AI finds your best opportunities</p></div>
+      <div class="how-step"><div class="how-num">3</div><p>Copy, paste & start earning</p></div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="label">Your Country</div>
     <input id="country" type="text" placeholder="Type or select your country..." oninput="filterCountry(this.value)" />
@@ -100,6 +330,7 @@
       <span class="ctag" onclick="setCountry('Nigeria',this)">🇳🇬 Nigeria</span>
     </div>
   </div>
+
   <div class="card">
     <div class="label">Your Skill / Profession</div>
     <div class="skills-wrapper">
@@ -108,11 +339,17 @@
     </div>
     <div id="selected-skill-tag"></div>
   </div>
+
   <div id="error" class="error"></div>
-  <button class="find-btn" id="find-btn" onclick="findIncome()">Find My Best Ways to Earn →</button>
+  <button class="find-btn" id="find-btn" onclick="findIncome()">Show Me The Money →</button>
   <div id="results"></div>
-  <div class="powered">EARNLY · Powered by Claude AI</div>
+
+  <div class="site-footer">
+    <div class="footer-logo">EARNLY</div>
+    <div class="footer-sub">© 2026 · Free forever</div>
+  </div>
 </div>
+
 <script>
 const SKILLS = [
   { cat: "Freelance & Writing", color: "#3b82f6", items: ["Copywriter","Content writer","Blog writer","SEO writer","Ghostwriter","Translator","Proofreader","Editor","Script writer","Screenwriter","Resume writer","Technical writer"] },
@@ -126,9 +363,21 @@ const SKILLS = [
   { cat: "Teaching & Coaching", color: "#f97316", items: ["Language tutor","Coding tutor","Math tutor","Music teacher","Fitness coach","Life coach","Business coach","Diet consultant","Meditation coach"] },
   { cat: "Creative & Media", color: "#8b5cf6", items: ["Photographer","Stock photo seller","Videographer","Music producer","Beat seller","Voice-over artist","Meme page owner","YouTube automation channel owner","TikTok theme page owner"] }
 ];
+
 let selectedSkill = '';
-function setCountry(val, el) { document.getElementById('country').value = val; document.querySelectorAll('.ctag').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
-function filterCountry(val) { document.querySelectorAll('.ctag').forEach(t => { t.style.display = t.textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none'; }); }
+
+function setCountry(val, el) {
+  document.getElementById('country').value = val;
+  document.querySelectorAll('.ctag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function filterCountry(val) {
+  document.querySelectorAll('.ctag').forEach(t => {
+    t.style.display = t.textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
 function renderDropdown(query) {
   const dd = document.getElementById('skills-dropdown');
   let html = ''; let total = 0;
@@ -136,47 +385,100 @@ function renderDropdown(query) {
     const filtered = query ? cat.items.filter(i => i.toLowerCase().includes(query.toLowerCase())) : cat.items;
     if (!filtered.length) return;
     html += `<div class="drop-category">${cat.cat}</div>`;
-    filtered.forEach(item => { html += `<div class="drop-item" onclick="selectSkill('${item}')"><span class="cat-dot" style="background:${cat.color}"></span>${item}</div>`; });
+    filtered.forEach(item => {
+      html += `<div class="drop-item" onclick="selectSkill('${item}')"><span class="cat-dot" style="background:${cat.color}"></span>${item}</div>`;
+    });
     total += filtered.length;
   });
   if (!total) html = '<div class="no-results">No results found</div>';
   dd.innerHTML = html;
 }
+
 function filterSkills(val) { renderDropdown(val); document.getElementById('skills-dropdown').classList.add('open'); }
 function openDropdown() { renderDropdown(document.getElementById('skills-input').value); document.getElementById('skills-dropdown').classList.add('open'); }
-function selectSkill(skill) { selectedSkill = skill; document.getElementById('skills-input').value = skill; document.getElementById('skills-dropdown').classList.remove('open'); document.getElementById('selected-skill-tag').innerHTML = `<div class="selected-skill">✓ ${skill} <span class="remove" onclick="clearSkill()">×</span></div>`; }
-function clearSkill() { selectedSkill = ''; document.getElementById('skills-input').value = ''; document.getElementById('selected-skill-tag').innerHTML = ''; }
-document.addEventListener('click', function(e) { if (!e.target.closest('.skills-wrapper')) document.getElementById('skills-dropdown').classList.remove('open'); });
+
+function selectSkill(skill) {
+  selectedSkill = skill;
+  document.getElementById('skills-input').value = skill;
+  document.getElementById('skills-dropdown').classList.remove('open');
+  document.getElementById('selected-skill-tag').innerHTML = `<div class="selected-skill">✓ ${skill} <span class="remove" onclick="clearSkill()">×</span></div>`;
+}
+
+function clearSkill() {
+  selectedSkill = '';
+  document.getElementById('skills-input').value = '';
+  document.getElementById('selected-skill-tag').innerHTML = '';
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.skills-wrapper')) document.getElementById('skills-dropdown').classList.remove('open');
+});
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
 async function findIncome() {
   const country = document.getElementById('country').value.trim();
   const skill = selectedSkill || document.getElementById('skills-input').value.trim();
   const errEl = document.getElementById('error');
   const resultsEl = document.getElementById('results');
   const btn = document.getElementById('find-btn');
+
   errEl.style.display = 'none';
   resultsEl.innerHTML = '';
+
   if (!country) { errEl.textContent = 'Please enter your country.'; errEl.style.display = 'block'; return; }
   if (!skill) { errEl.textContent = 'Please select or type a skill.'; errEl.style.display = 'block'; return; }
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Finding your opportunities...';
+
   try {
-    const response = await fetch('/api/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ country, skill }) });
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country, skill })
+    });
+
     const ideas = await response.json();
     if (!response.ok) throw new Error(ideas.error || 'Server error');
-    resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} opportunities found · ${skill} · ${country}</div>` +
+
+    resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} ways to earn · ${skill} · ${country}</div>` +
       ideas.map((idea, i) => `
         <div class="result-card" style="animation-delay:${i*0.1}s">
-          <div class="card-top"><div class="card-icon">${idea.icon}</div><div><div class="card-title">${idea.title}</div><div class="card-platform">${idea.platform}</div></div></div>
+          <div class="card-header">
+            <div class="card-left">
+              <div class="card-icon">${idea.icon}</div>
+              <div>
+                <div class="card-title">${idea.title}</div>
+                <div class="card-platform">${idea.platform}</div>
+              </div>
+            </div>
+            <span class="earn-badge">💰 ${idea.earn}</span>
+          </div>
           <div class="card-desc">${idea.desc}</div>
-          <ul class="steps-list">${idea.steps.map((s,n) => `<li><span class="step-num">${n+1}</span>${s}</li>`).join('')}</ul>
-          <div class="card-footer"><span class="earn-badge">💰 ${idea.earn}</span><a href="${idea.link}" target="_blank" class="start-btn">Start Now →</a></div>
+          <ul class="steps-list">
+            ${idea.steps.map((s,n) => `
+              <li>
+                <div class="step-left"><span class="step-num">${n+1}</span>${s}</div>
+                <button class="copy-btn" onclick="copyText(\`${s.replace(/`/g,'\\`')}\`, this)">Copy</button>
+              </li>`).join('')}
+          </ul>
+          <a href="${idea.link}" target="_blank" class="start-btn">Start Now on ${idea.platform} →</a>
         </div>`).join('');
+
   } catch(e) {
     errEl.textContent = 'Something went wrong. Please try again.';
     errEl.style.display = 'block';
   }
+
   btn.disabled = false;
-  btn.innerHTML = 'Find My Best Ways to Earn →';
+  btn.innerHTML = 'Show Me The Money →';
 }
 </script>
 </body>
