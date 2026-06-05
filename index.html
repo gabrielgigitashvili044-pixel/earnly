@@ -640,4 +640,18 @@ async function findIncome() {
           </div>
           <div class="card-footer">
             <a href="${idea.link}" target="_blank" class="start-btn">Start Now on ${idea.platform} →</a>
-      
+          </div>
+        </div>`;
+      }).join('');
+
+  } catch (e) {
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = 'Show Me The Money →';
+}
+</script>
+</body>
+</html>
