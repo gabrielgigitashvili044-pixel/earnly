@@ -593,23 +593,54 @@ function shareResults(country, skill, earn, btn) {
   const earnLine = earn ? `make ${earn} ` : 'earn real money ';
   const shareText = `I just found 4 real ways to ${earnLine}as a ${skill} in ${country} 💰\n\nFree, no signup, takes 10 seconds 👉`;
   const shareUrl = 'https://earnly-io.vercel.app';
+  const fullText = `${shareText} ${shareUrl}`;
 
+  function flashCopied() {
+    if (!btn) return;
+    const original = btn.innerHTML;
+    btn.innerHTML = '✓ Copied — paste it anywhere';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2500);
+  }
+
+  function legacyCopy() {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = fullText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) { return false; }
+  }
+
+  function fallbackPrompt() {
+    window.prompt('Copy this and paste it on TikTok, Instagram or WhatsApp:', fullText);
+  }
+
+  // 1) Native phone share sheet
   if (navigator.share) {
     navigator.share({ title: 'EARNLY — Your Skill. Real Money.', text: shareText, url: shareUrl }).catch(() => {});
     return;
   }
 
-  const fullText = `${shareText} ${shareUrl}`;
-  navigator.clipboard.writeText(fullText).then(() => {
-    if (btn) {
-      const original = btn.innerHTML;
-      btn.innerHTML = '✓ Copied — paste it anywhere';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2500);
-    }
-  }).catch(() => {
-    alert(fullText);
-  });
+  // 2) Modern clipboard API (most desktop browsers on HTTPS)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(fullText).then(flashCopied).catch(() => {
+      if (legacyCopy()) flashCopied(); else fallbackPrompt();
+    });
+    return;
+  }
+
+  // 3) Legacy copy via hidden textarea
+  if (legacyCopy()) { flashCopied(); return; }
+
+  // 4) Guaranteed last resort — a popup with the text ready to copy
+  fallbackPrompt();
 }
 
 function copyStep(btn, text) {
