@@ -598,7 +598,7 @@ function shareResults(country, skill, earn, btn) {
   function flashCopied() {
     if (!btn) return;
     const original = btn.innerHTML;
-    btn.innerHTML = '✓ Copied — paste it anywhere';
+    btn.innerHTML = '✓ Copied! Paste it on TikTok, IG or WhatsApp';
     btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2500);
   }
