@@ -252,6 +252,7 @@
     .find-btn:disabled::before { animation: none; }
 
     .error { color: #f87171; font-size: 13px; font-weight: 500; margin-top: 10px; display: none; text-align: center; }
+    .trust-line { font-size: 11px; color: rgba(255,255,255,0.12); text-align: center; margin-top: 14px; letter-spacing: 0.3px; font-weight: 500; }
 
     /* ─── RESULTS ─── */
     .results-header {
@@ -428,7 +429,7 @@
         <h1>Your Skill.<br><span class="grad">Real Money.</span></h1>
         <p class="sub">Tell us your country and skill. We find exactly how to turn what you already know into real income — copy-paste ready. No courses. No gurus. No waiting.</p>
         <div class="counter-strip">
-          🔥 <span class="counter-num" id="counter">0</span> ideas generated today
+          <span class="counter-num" id="counter">0</span> income paths generated today
         </div>
         <div class="stats">
           <span class="stat-pill">200+ professions</span>
@@ -483,6 +484,7 @@
         Show Me The Money →
       </button>
 
+      <p class="trust-line">No account required · No data stored · Results generated instantly</p>
       <div id="results"></div>
 
       <div class="site-footer">
@@ -691,7 +693,7 @@ async function findIncome() {
     const safeSkill = skill.replace(/'/g, "\\'");
     const topEarn = (ideas[0] && ideas[0].earn ? ideas[0].earn : '').replace(/'/g, "\\'");
 
-    resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} ways to earn · ${skill} · ${country}</div>` +
+    resultsEl.innerHTML = `<div class="results-header">✦ ${ideas.length} Income Paths · ${skill} · ${country}</div>` +
       ideas.map((idea, i) => {
         const diffClass = idea.difficulty === 'Easy' ? 'badge-easy' : idea.difficulty === 'Hard' ? 'badge-hard' : 'badge-medium';
         const stepsHtml = idea.steps.map((s, n) =>
@@ -714,11 +716,11 @@ async function findIncome() {
               </div>
             </div>
             <div class="earn-row">
-              <span class="earn-main">💰 ${idea.earn}</span>
+              <span class="earn-main">${idea.earn}</span>
               <span class="first-pay">First money: <b>${idea.firstPayment || '7–14 days'}</b></span>
             </div>
             <div class="card-why">${idea.why || idea.desc || ''}</div>
-            <div class="steps-label">Do this right now</div>
+            <div class="steps-label">Action Plan</div>
             <ul class="steps-list">${stepsHtml}</ul>
           </div>
           <div class="card-footer">
@@ -727,8 +729,8 @@ async function findIncome() {
         </div>`;
       }).join('') +
       `<div class="share-banner">
-        <p>💸 You just found <b>${ideas.length} real ways</b> to earn as a <b>${skill}</b> in <b>${country}</b>.<br>Someone you know needs to see this too.</p>
-        <button class="share-btn" id="share-btn" onclick="shareResults('${safeCountry}', '${safeSkill}', '${topEarn}', this)">📲 Share These Results</button>
+        <p>You just found <b>${ideas.length} income paths</b> for <b>${skill}</b> professionals in <b>${country}</b>.<br>Know someone who needs to see this?</p>
+        <button class="share-btn" id="share-btn" onclick="shareResults('${safeCountry}', '${safeSkill}', '${topEarn}', this)">Share Results</button>
       </div>`;
 
   } catch (e) {
