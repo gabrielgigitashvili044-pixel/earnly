@@ -8,7 +8,669 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,1,300;9..144,1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EARNLY — Your Skill. Real Money.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300;9..144,0,400;9..144,1,300;9..144,1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
     :root {
+      --bg: #0b0c0b;
+      --bg-soft: #101210;
+      --ink: #e2ece0;
+      --ink-dim: #62765e;
+      --line: rgba(226,236,224,0.07);
+      --green: #22c55e;
+      --green-bright: #4ade80;
+      --green-soft: rgba(34,197,94,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* grain overlay */
+    body::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── INTRO ─── */
+    #intro {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 2000; transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+    #intro.hide { opacity: 0; pointer-events: none; }
+    .intro-wordmark {
+      font-family: 'Fraunces', serif; font-weight: 300;
+      font-size: clamp(56px, 13vw, 88px); letter-spacing: -3px;
+      color: var(--ink); opacity: 0; animation: rise 0.8s 0.2s forwards;
+    }
+    .intro-wordmark em { font-style: italic; color: var(--green); }
+    .intro-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--ink-dim); margin-top: 18px;
+      opacity: 0; animation: rise 0.8s 0.45s forwards;
+    }
+    .intro-bar {
+      width: 72px; height: 1px; background: var(--line);
+      margin-top: 34px; overflow: hidden;
+      opacity: 0; animation: rise 0.5s 0.65s forwards;
+    }
+    .intro-bar-fill { height: 100%; width: 0%; background: var(--green); animation: barFill 1.4s ease 0.85s forwards; }
+
+    /* ─── APP ─── */
+    #app { opacity: 0; transition: opacity 0.9s ease; }
+    #app.show { opacity: 1; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; height: 60px;
+      z-index: 100; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid transparent; transition: border-color 0.4s;
+    }
+    nav.scrolled { border-bottom-color: var(--line); }
+    .nav-logo {
+      font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.1rem;
+      letter-spacing: -0.5px; color: var(--ink); text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo em { font-style: italic; color: var(--green); }
+    .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .nav-right {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+      padding: 100px 36px 72px; max-width: 900px; margin: 0 auto;
+    }
+    .hero-kicker {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+    }
+    .kicker-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 10px var(--green);
+      animation: pulse 2.2s ease-in-out infinite; flex-shrink: 0;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 10px var(--green)} 50%{opacity:0.3;box-shadow:none} }
+    .kicker-text {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-dim);
+    }
+
+    .hero h1 {
+      font-family: 'Fraunces', serif; font-weight: 300;
+      font-size: clamp(3.8rem, 14vw, 9rem);
+      line-height: 0.92; letter-spacing: -4px; margin-bottom: 36px;
+    }
+    .hero h1 em { font-style: italic; color: var(--green); }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--ink-dim); line-height: 1.72;
+      max-width: 44ch; margin-bottom: 52px;
+    }
+
+    .hero-stats { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .hstat { display: flex; flex-direction: column; gap: 5px; }
+    .hstat-num {
+      font-family: 'Fraunces', serif; font-size: 1.7rem; font-weight: 300;
+      color: var(--green); line-height: 1; letter-spacing: -1px;
+    }
+    .hstat-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-dim);
+    }
+    .hstat-divider { width: 1px; height: 34px; background: var(--line); }
+
+    /* ─── MARQUEE ─── */
+    .marquee {
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      overflow: hidden; padding: 18px 0; white-space: nowrap;
+    }
+    .marquee-track { display: inline-block; animation: scroll 30s linear infinite; }
+    .marquee-track span {
+      font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 300;
+      color: var(--ink-dim); margin: 0 26px;
+    }
+    .marquee-track span.green { font-style: italic; color: var(--green); margin: 0 4px; }
+    @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ─── SECTIONS ─── */
+    .section { max-width: 680px; margin: 0 auto; padding: 88px 36px; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-dim); margin-bottom: 40px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 36px; }
+    .how-step-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--green);
+      letter-spacing: 0.1em; margin-bottom: 14px;
+    }
+    .how-step h3 {
+      font-family: 'Fraunces', serif; font-weight: 400;
+      font-size: 1.15rem; margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .how-step p { font-size: 0.87rem; color: var(--ink-dim); line-height: 1.65; }
+
+    /* ─── FORM SECTION ─── */
+    .form-section { max-width: 680px; margin: 0 auto; padding: 0 36px 88px; }
+    .form-section .section-label { margin-bottom: 36px; }
+
+    .form-field { margin-bottom: 12px; }
+    .form-field-header {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 10px;
+    }
+    .field-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.58rem;
+      color: var(--green); letter-spacing: 0.1em;
+    }
+    .field-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-dim);
+    }
+
+    .form-box {
+      border: 1px solid var(--line); border-radius: 16px;
+      padding: 18px 20px; background: var(--bg-soft);
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .form-box:focus-within {
+      border-color: rgba(34,197,94,0.22); background: rgba(34,197,94,0.015);
+    }
+    input {
+      width: 100%; border: none; background: transparent; color: var(--ink);
+      font-size: 0.95rem; font-weight: 500; font-family: 'Inter', sans-serif; outline: none;
+    }
+    input::placeholder { color: rgba(226,236,224,0.15); }
+
+    .country-tags {
+      display: flex; flex-wrap: wrap; gap: 5px;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+    }
+    .ctag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 0.05em;
+      padding: 5px 11px; border-radius: 100px; background: transparent;
+      border: 1px solid var(--line); color: var(--ink-dim); cursor: pointer; transition: all 0.15s;
+    }
+    .ctag:hover { border-color: rgba(34,197,94,0.28); color: var(--green-bright); background: var(--green-soft); }
+    .ctag.active { border-color: rgba(34,197,94,0.3); color: var(--green-bright); background: var(--green-soft); }
+
+    .skills-wrapper { position: relative; }
+    .dropdown {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: #131813; border: 1px solid var(--line); border-radius: 14px;
+      max-height: 260px; overflow-y: auto; z-index: 100; display: none;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+    }
+    .dropdown.open { display: block; }
+    .dropdown::-webkit-scrollbar { width: 3px; }
+    .dropdown::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+    .drop-category {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; font-weight: 500;
+      color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.14em; padding: 12px 16px 4px;
+    }
+    .drop-item {
+      padding: 10px 16px; font-size: 0.87rem; font-weight: 500;
+      color: rgba(226,236,224,0.4); cursor: pointer;
+      transition: all 0.1s; display: flex; align-items: center; gap: 10px;
+    }
+    .drop-item:hover { background: var(--green-soft); color: var(--ink); }
+    .cat-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .no-results { padding: 20px; font-size: 0.85rem; color: var(--ink-dim); text-align: center; }
+
+    .selected-skill {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
+      padding: 5px 13px; border-radius: 100px;
+      border: 1px solid rgba(34,197,94,0.22);
+      font-size: 0.82rem; font-weight: 600; color: var(--green-bright); background: var(--green-soft);
+    }
+    .selected-skill .remove { cursor: pointer; opacity: 0.4; transition: opacity 0.15s; }
+    .selected-skill .remove:hover { opacity: 1; }
+
+    /* ─── BUTTON ─── */
+    .find-btn {
+      width: 100%; padding: 19px; border-radius: 12px; border: none;
+      background: var(--green); color: #031a07;
+      font-weight: 700; font-size: 1rem; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 16px; letter-spacing: -0.2px;
+      box-shadow: 0 4px 28px rgba(34,197,94,0.2);
+    }
+    .find-btn:hover { background: var(--green-bright); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(34,197,94,0.3); }
+    .find-btn:active { transform: translateY(0); }
+    .find-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .trust-line {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(226,236,224,0.09); text-align: center; margin-top: 14px;
+    }
+    .error {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: #f87171;
+      font-weight: 500; margin-top: 10px; display: none; text-align: center; letter-spacing: 0.04em;
+    }
+
+    /* spinner */
+    .spinner {
+      display: inline-block; width: 15px; height: 15px;
+      border: 2px solid rgba(3,26,7,0.25); border-top-color: #031a07;
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── RESULTS ─── */
+    .results-section { max-width: 680px; margin: 0 auto; padding: 0 36px 20px; }
+    .results-header {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-dim);
+      margin: 48px 0 28px; display: flex; align-items: center; gap: 14px;
+    }
+    .results-header::before, .results-header::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+    .result-card {
+      border: 1px solid var(--line); border-radius: 20px; background: var(--bg-soft);
+      margin-bottom: 12px; overflow: hidden;
+      animation: rise 0.5s cubic-bezier(0.2,0,0,1) forwards; opacity: 0;
+      transition: border-color 0.3s, transform 0.3s; position: relative;
+    }
+    .result-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(34,197,94,0.28), transparent);
+    }
+    .result-card:hover { border-color: rgba(34,197,94,0.13); transform: translateY(-2px); }
+
+    .card-inner { padding: 26px 26px 18px; }
+    .card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .card-top-left { display: flex; align-items: center; gap: 14px; }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(255,255,255,0.022); border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .card-title {
+      font-family: 'Fraunces', serif; font-weight: 400;
+      font-size: 1.2rem; letter-spacing: -0.01em; margin-bottom: 6px;
+    }
+    .card-badges { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .card-platform {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.56rem;
+      color: #60a5fa; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .meta-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.54rem;
+      padding: 2px 7px; border-radius: 100px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .badge-easy   { background: rgba(34,197,94,0.07);  color: #86efac; border: 1px solid rgba(34,197,94,0.12); }
+    .badge-medium { background: rgba(245,158,11,0.07); color: #fcd34d; border: 1px solid rgba(245,158,11,0.13); }
+    .badge-hard   { background: rgba(239,68,68,0.07);  color: #fca5a5; border: 1px solid rgba(239,68,68,0.13); }
+    .badge-start  { background: var(--green-soft); color: var(--green-bright); border: 1px solid rgba(34,197,94,0.16); }
+
+    .earn-block { text-align: right; flex-shrink: 0; }
+    .earn-main {
+      font-family: 'Fraunces', serif; font-weight: 300;
+      font-size: 1.8rem; color: var(--green); line-height: 1; letter-spacing: -1px;
+    }
+    .first-pay {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.56rem;
+      color: var(--ink-dim); letter-spacing: 0.06em; margin-top: 5px;
+    }
+    .first-pay b { color: rgba(226,236,224,0.3); }
+
+    .card-divider { height: 1px; background: var(--line); margin: 0 0 18px; }
+    .card-why {
+      font-size: 0.87rem; color: var(--ink-dim); line-height: 1.68; margin-bottom: 20px;
+      border-left: 2px solid rgba(34,197,94,0.18); padding-left: 13px;
+    }
+    .steps-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; font-weight: 500;
+      color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 10px;
+    }
+    .steps-list { list-style: none; }
+    .steps-list li {
+      font-size: 0.87rem; color: rgba(226,236,224,0.4);
+      padding: 8px 10px; display: flex; align-items: flex-start; gap: 12px;
+      border-radius: 8px; transition: background 0.15s;
+    }
+    .steps-list li:hover { background: rgba(255,255,255,0.017); color: rgba(226,236,224,0.62); }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--green);
+      min-width: 20px; margin-top: 1px; flex-shrink: 0;
+    }
+    .step-text { flex: 1; line-height: 1.58; }
+    .card-footer { padding: 0 26px 22px; }
+    .start-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 11px 18px; border-radius: 10px; background: transparent;
+      border: 1px solid var(--line); color: rgba(226,236,224,0.3);
+      font-size: 0.85rem; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; text-decoration: none; transition: all 0.2s; width: 100%;
+    }
+    .start-btn:hover { border-color: rgba(96,165,250,0.28); color: #93c5fd; background: rgba(59,130,246,0.05); }
+
+    /* ─── SHARE BANNER ─── */
+    .share-banner {
+      border: 1px solid var(--line); border-radius: 20px; padding: 40px 32px;
+      margin: 12px 0; background: var(--bg-soft); text-align: center;
+      animation: rise 0.5s cubic-bezier(0.2,0,0,1) forwards; opacity: 0; animation-delay: 0.3s;
+    }
+    .share-banner-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-dim); margin-bottom: 18px;
+    }
+    .share-banner h3 {
+      font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.55rem;
+      letter-spacing: -0.5px; margin-bottom: 10px; line-height: 1.15;
+    }
+    .share-banner h3 em { font-style: italic; color: var(--green); }
+    .share-banner p { font-size: 0.88rem; color: var(--ink-dim); margin-bottom: 28px; line-height: 1.65; }
+    .share-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 13px 30px; border-radius: 100px; border: none;
+      background: var(--green); color: #031a07;
+      font-weight: 700; font-size: 0.9rem; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all 0.2s; letter-spacing: -0.1px;
+      box-shadow: 0 4px 20px rgba(34,197,94,0.2);
+    }
+    .share-btn:hover { background: var(--green-bright); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(34,197,94,0.3); }
+    .share-btn:active { transform: translateY(0); }
+    .share-btn.copied { background: #3b82f6; box-shadow: 0 4px 20px rgba(59,130,246,0.2); }
+
+    /* ─── FOOTER ─── */
+    .site-footer {
+      max-width: 900px; margin: 0 auto; padding: 40px 36px 64px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-wordmark {
+      font-family: 'Fraunces', serif; font-weight: 300; font-size: 1.1rem;
+      letter-spacing: -0.5px; display: flex; align-items: center; gap: 9px;
+    }
+    .footer-wordmark em { font-style: italic; color: var(--green); }
+    .footer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .footer-meta {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-dim);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes rise    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+    @keyframes barFill { to { width: 100%; } }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 100px 20px 64px; }
+      .hero h1 { letter-spacing: -2px; }
+      .section, .form-section, .results-section { padding-left: 20px; padding-right: 20px; }
+      .site-footer { padding: 36px 20px 52px; flex-direction: column; align-items: flex-start; }
+      .how-steps { grid-template-columns: 1fr; gap: 28px; }
+      .card-top { flex-direction: column; align-items: flex-start; }
+      .earn-block { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-wordmark">E<em>A</em>RNLY</div>
+    <div class="intro-sub">Your skill · Real money</div>
+    <div class="intro-bar"><div class="intro-bar-fill"></div></div>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+
+    <!-- NAV -->
+    <nav id="nav">
+      <a href="#" class="nav-logo">
+        <span class="nav-dot"></span>
+        E<em>A</em>RNLY
+      </a>
+      <span class="nav-right">Free · AI-powered</span>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-kicker">
+        <span class="kicker-dot"></span>
+        <span class="kicker-text">Free · No signup · 200+ professions</span>
+      </div>
+      <h1>
+        Turn your skill<br>into <em>real income</em>.
+      </h1>
+      <p class="hero-sub">
+        No courses. No gurus. No gatekeeping.<br>
+        Tell us what you do — we find the real money paths.
+      </p>
+      <div class="hero-stats">
+        <div class="hstat">
+          <div class="hstat-num">200+</div>
+          <div class="hstat-label">Professions</div>
+        </div>
+        <div class="hstat-divider"></div>
+        <div class="hstat">
+          <div class="hstat-num">50+</div>
+          <div class="hstat-label">Countries</div>
+        </div>
+        <div class="hstat-divider"></div>
+        <div class="hstat">
+          <div class="hstat-num" id="counter">0</div>
+          <div class="hstat-label">Paths today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+      <div class="marquee-track">
+        <span>Copywriting</span><span class="green">·</span>
+        <span>Design</span><span class="green">·</span>
+        <span>Development</span><span class="green">·</span>
+        <span>Marketing</span><span class="green">·</span>
+        <span>Teaching</span><span class="green">·</span>
+        <span>E-commerce</span><span class="green">·</span>
+        <span>AI & Automation</span><span class="green">·</span>
+        <span>Video Editing</span><span class="green">·</span>
+        <span>Copywriting</span><span class="green">·</span>
+        <span>Design</span><span class="green">·</span>
+        <span>Development</span><span class="green">·</span>
+        <span>Marketing</span><span class="green">·</span>
+        <span>Teaching</span><span class="green">·</span>
+        <span>E-commerce</span><span class="green">·</span>
+        <span>AI & Automation</span><span class="green">·</span>
+        <span>Video Editing</span><span class="green">·</span>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section">
+      <div class="section-label">How it works</div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-step-num">01</div>
+          <h3>Pick your skill</h3>
+          <p>Choose your country and what you do — from 200+ professions across every category.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">02</div>
+          <h3>We find the paths</h3>
+          <p>Our AI scans real opportunities matched to your skill and your market. No generic advice.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">03</div>
+          <h3>Start today</h3>
+          <p>Each result comes with exact steps, realistic earnings, and a direct link to begin.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section">
+      <div class="section-label">Find your paths</div>
+
+      <div class="form-field">
+        <div class="form-field-header">
+          <span class="field-num">01</span>
+          <span class="field-label">Your Country</span>
+        </div>
+        <div class="form-box">
+          <input id="country" type="text" placeholder="Type or select your country..." oninput="filterCountry(this.value)" />
+          <div class="country-tags">
+            <span class="ctag" onclick="setCountry('USA',this)">🇺🇸 USA</span>
+            <span class="ctag" onclick="setCountry('United Kingdom',this)">🇬🇧 UK</span>
+            <span class="ctag" onclick="setCountry('Canada',this)">🇨🇦 Canada</span>
+            <span class="ctag" onclick="setCountry('Australia',this)">🇦🇺 Australia</span>
+            <span class="ctag" onclick="setCountry('Germany',this)">🇩🇪 Germany</span>
+            <span class="ctag" onclick="setCountry('France',this)">🇫🇷 France</span>
+            <span class="ctag" onclick="setCountry('Italy',this)">🇮🇹 Italy</span>
+            <span class="ctag" onclick="setCountry('Spain',this)">🇪🇸 Spain</span>
+            <span class="ctag" onclick="setCountry('Georgia',this)">🇬🇪 Georgia</span>
+            <span class="ctag" onclick="setCountry('Turkey',this)">🇹🇷 Turkey</span>
+            <span class="ctag" onclick="setCountry('India',this)">🇮🇳 India</span>
+            <span class="ctag" onclick="setCountry('Brazil',this)">🇧🇷 Brazil</span>
+            <span class="ctag" onclick="setCountry('Nigeria',this)">🇳🇬 Nigeria</span>
+            <span class="ctag" onclick="setCountry('Philippines',this)">🇵🇭 Philippines</span>
+            <span class="ctag" onclick="setCountry('Mexico',this)">🇲🇽 Mexico</span>
+            <span class="ctag" onclick="setCountry('Morocco',this)">🇲🇦 Morocco</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <div class="form-field-header">
+          <span class="field-num">02</span>
+          <span class="field-label">Your Skill / Profession</span>
+        </div>
+        <div class="form-box">
+          <div class="skills-wrapper">
+            <input id="skills-input" type="text" placeholder="Search from 200+ professions..." oninput="filterSkills(this.value)" onfocus="openDropdown()" autocomplete="off" />
+            <div class="dropdown" id="skills-dropdown"></div>
+          </div>
+          <div id="selected-skill-tag"></div>
+        </div>
+      </div>
+
+      <div id="error" class="error"></div>
+      <button class="find-btn" id="find-btn" onclick="findIncome()">
+        Show Me The Money →
+      </button>
+      <p class="trust-line">No account required · No data stored · Results generated instantly</p>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-section">
+      <div id="results"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="site-footer">
+      <div class="footer-wordmark">
+        <span class="footer-dot"></span>
+        E<em>A</em>RNLY
+      </div>
+      <div class="footer-meta">© 2026 · Free forever</div>
+    </div>
+
+  </div>
+
+<script>
+// ─── INTRO ───
+setTimeout(() => {
+  document.getElementById('intro').classList.add('hide');
+  setTimeout(() => { document.getElementById('intro').style.display = 'none'; }, 900);
+  document.getElementById('app').classList.add('show');
+}, 2000);
+
+// ─── NAV SCROLL BORDER ───
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ─── COUNTER ───
+(function() {
+  const target = Math.floor(Math.random() * 3000) + 2500;
+  const el = document.getElementById('counter');
+  let start = null;
+  const duration = 2200;
+  function step(ts) {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.floor(ease * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  }
+  setTimeout(() => requestAnimationFrame(step), 2200);
+})();
+
+// ─── SKILLS DATA ───
+const SKILLS = [
+  { cat: "Freelance & Writing", color: "#3b82f6", items: ["Copywriter","Content writer","Blog writer","SEO writer","Ghostwriter","Translator","Proofreader","Editor","Script writer","Screenwriter","Resume writer","Technical writer"] },
+  { cat: "Social Media & Video", color: "#a855f7", items: ["Social media manager","TikTok content creator","YouTube script writer","Thumbnail designer","Video editor","Motion designer","Podcast host","Reels editor"] },
+  { cat: "Design & Creative", color: "#ec4899", items: ["Graphic designer","Logo designer","UI designer","UX designer","Web designer","Digital artist","Illustrator","Animator","3D modeler","Canva template creator","Branding expert"] },
+  { cat: "Development", color: "#22c55e", items: ["WordPress developer","Shopify developer","Front-end developer","Back-end developer","Full-stack developer","Mobile app developer","Game developer","Python developer","No-code developer","Webflow developer","API integrator"] },
+  { cat: "AI & Tech", color: "#f59e0b", items: ["AI prompt engineer","Chatbot builder","AI content creator","AI automation builder","ChatGPT consultant","Automation specialist","Zapier expert","Data analyst","Data scientist","Machine learning engineer"] },
+  { cat: "Marketing & Sales", color: "#ef4444", items: ["Email marketer","Affiliate marketer","Lead generator","Cold email specialist","Funnel builder","Sales closer","CRM manager","Growth hacker","SEO specialist","Paid ads manager"] },
+  { cat: "Business & Remote", color: "#06b6d4", items: ["Virtual assistant","Data entry specialist","Customer support agent","Technical support","Notion consultant","Project manager","Remote accountant","Bookkeeper","Financial advisor","Community manager"] },
+  { cat: "E-commerce & Money", color: "#84cc16", items: ["Dropshipping manager","Amazon FBA seller","Etsy seller","Print-on-demand seller","Digital product seller","Course creator","E-book seller","Template seller","Online coach","Fiverr gig seller"] },
+  { cat: "Teaching & Coaching", color: "#f97316", items: ["Language tutor","Coding tutor","Math tutor","Music teacher","Fitness coach","Life coach","Business coach","Diet consultant","Meditation coach"] },
+  { cat: "Creative & Media", color: "#8b5cf6", items: ["Photographer","Stock photo seller","Videographer","Music producer","Beat seller","Voice-over artist","Meme page owner","YouTube automation channel owner","TikTok theme page owner"] }
+];
+
+let selectedSkill = '';
+
+function setCountry(val, el) {
+  document.getElementById('country').value = val;
+  document.querySelectorAll('.ctag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function filterCountry(val) {
+  document.querySelectorAll('.ctag').forEach(t => {
+    t.style.display = t.textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+function renderDropdown(query) {
+  const dd = document.getElementById('skills-dropdown');
+  let html = ''; let total = 0;
+  SKILLS.forEach(cat => {
+    const filtered = query ? cat.items.filter(i => i.toLowerCase().includes(query.toLowerCase())) : cat.items;
+    if (!filtered.length) return;
+    html += `<div class="drop-category">${cat.cat}</div>`;
+    filtered.forEach(item => {
+      html += `<div class="drop-item" onclick="selectSkill('${item.replace(/'/g,"\\'")}')"><span class="cat-dot" style="background:${cat.color}"></span>${item}</div>`;
+    });
+    total += filtered.length;
+  });
+  if (!total) html = '<div clas
       --bg: #0b0c0b;
       --bg-soft: #101210;
       --ink: #e2ece0;
