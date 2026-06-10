@@ -660,4 +660,166 @@ function renderDropdown(query) {
     });
     total += filtered.length;
   });
-  if (!total) html = '<div clas
+  if (!total) html = '<div class="no-results">No results found</div>';
+  dd.innerHTML = html;
+}
+
+function filterSkills(val) {
+  renderDropdown(val);
+  document.getElementById('skills-dropdown').classList.add('open');
+}
+
+function openDropdown() {
+  renderDropdown(document.getElementById('skills-input').value);
+  document.getElementById('skills-dropdown').classList.add('open');
+}
+
+function selectSkill(skill) {
+  selectedSkill = skill;
+  document.getElementById('skills-input').value = skill;
+  document.getElementById('skills-dropdown').classList.remove('open');
+  document.getElementById('selected-skill-tag').innerHTML =
+    `<div class="selected-skill">✓ ${skill} <span class="remove" onclick="clearSkill()">×</span></div>`;
+}
+
+function clearSkill() {
+  selectedSkill = '';
+  document.getElementById('skills-input').value = '';
+  document.getElementById('selected-skill-tag').innerHTML = '';
+}
+
+// ─── SHARE ───
+function shareResults(country, skill, earn, btn) {
+  const earnLine = earn ? `make ${earn} ` : 'earn real money ';
+  const shareText = `I just found 4 real ways to ${earnLine}as a ${skill} in ${country} 💰\n\nFree, no signup, takes 10 seconds 👉`;
+  const shareUrl = 'https://earnly-io.vercel.app';
+  const fullText = `${shareText} ${shareUrl}`;
+
+  function flashCopied() {
+    if (!btn) return;
+    const original = btn.innerHTML;
+    btn.innerHTML = '✓ Copied! Paste it on TikTok, IG or WhatsApp';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2500);
+  }
+  function legacyCopy() {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = fullText; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta); return ok;
+    } catch (e) { return false; }
+  }
+  function fallbackPrompt() { window.prompt('Copy this and paste it on TikTok, Instagram or WhatsApp:', fullText); }
+
+  if (navigator.share) {
+    navigator.share({ title: 'EARNLY — Your Skill. Real Money.', text: shareText, url: shareUrl }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(fullText).then(flashCopied).catch(() => {
+      if (legacyCopy()) flashCopied(); else fallbackPrompt();
+    });
+    return;
+  }
+  if (legacyCopy()) { flashCopied(); return; }
+  fallbackPrompt();
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.skills-wrapper')) {
+    document.getElementById('skills-dropdown').classList.remove('open');
+  }
+});
+
+// ─── MAIN SEARCH ───
+async function findIncome() {
+  const country = document.getElementById('country').value.trim();
+  const skill = selectedSkill || document.getElementById('skills-input').value.trim();
+  const errEl = document.getElementById('error');
+  const resultsEl = document.getElementById('results');
+  const btn = document.getElementById('find-btn');
+
+  errEl.style.display = 'none';
+  resultsEl.innerHTML = '';
+
+  if (!country) { errEl.textContent = 'Please enter your country.'; errEl.style.display = 'block'; return; }
+  if (!skill)   { errEl.textContent = 'Please select or type a skill.'; errEl.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Scanning opportunities...';
+
+  try {
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country, skill })
+    });
+
+    const ideas = await response.json();
+    if (!response.ok) throw new Error(ideas.error || 'Server error');
+
+    const safeCountry = country.replace(/'/g, "\\'");
+    const safeSkill   = skill.replace(/'/g, "\\'");
+    const topEarn = (ideas[0] && ideas[0].earn ? ideas[0].earn : '').replace(/'/g, "\\'");
+
+    resultsEl.innerHTML =
+      `<div class="results-header">${ideas.length} Income Paths · ${skill} · ${country}</div>` +
+      ideas.map((idea, i) => {
+        const diffClass = idea.difficulty === 'Easy' ? 'badge-easy' : idea.difficulty === 'Hard' ? 'badge-hard' : 'badge-medium';
+        const stepsHtml = idea.steps.map((s, n) =>
+          `<li><span class="step-num">0${n+1}</span><span class="step-text">${s}</span></li>`
+        ).join('');
+        return `
+        <div class="result-card" style="animation-delay:${i * 0.1}s">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="card-top-left">
+                <div class="card-icon">${idea.icon}</div>
+                <div>
+                  <div class="card-title">${idea.title}</div>
+                  <div class="card-badges">
+                    <span class="card-platform">${idea.platform}</span>
+                    <span class="meta-badge ${diffClass}">${idea.difficulty || 'Medium'}</span>
+                    <span class="meta-badge badge-start">${idea.badge || 'Start today'}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="earn-block">
+                <div class="earn-main">${idea.earn}</div>
+                <div class="first-pay">First: <b>${idea.firstPayment || '7–14 days'}</b></div>
+              </div>
+            </div>
+            <div class="card-divider"></div>
+            <div class="card-why">${idea.why || idea.desc || ''}</div>
+            <div class="steps-label">Action Plan</div>
+            <ul class="steps-list">${stepsHtml}</ul>
+          </div>
+          <div class="card-footer">
+            <a href="${idea.link}" target="_blank" class="start-btn">Start on ${idea.platform} →</a>
+          </div>
+        </div>`;
+      }).join('') +
+      `<div class="share-banner">
+        <div class="share-banner-label">Share your results</div>
+        <h3>Found your <em>income path?</em></h3>
+        <p>You just found ${ideas.length} real ways to earn as a ${skill} in ${country}.<br>Someone you know needs to see this.</p>
+        <button class="share-btn" id="share-btn" onclick="shareResults('${safeCountry}', '${safeSkill}', '${topEarn}', this)">Share Results</button>
+      </div>`;
+
+    setTimeout(() => {
+      resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+
+  } catch (e) {
+    errEl.textContent = 'Something went wrong. Please try again.';
+    errEl.style.display = 'block';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = 'Show Me The Money →';
+}
+</script>
+</body>
+</html>
